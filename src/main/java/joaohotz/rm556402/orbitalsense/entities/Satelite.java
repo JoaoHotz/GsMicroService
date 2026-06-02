@@ -36,7 +36,7 @@ public class Satelite {
     @Column(name = "DATA_LANCAMENTO", nullable = false)
     private LocalDate dataLancamento;
 
-    @Column(name = "STATUS", nullable = false, length = 20)
+    @Column(name = "STATUS_SAT", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private Status status;
 

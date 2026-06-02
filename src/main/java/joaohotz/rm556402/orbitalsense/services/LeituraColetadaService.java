@@ -1,9 +1,11 @@
 package joaohotz.rm556402.orbitalsense.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import joaohotz.rm556402.orbitalsense.dtos.LeituraColetadaDto;
 import joaohotz.rm556402.orbitalsense.dtos.SateliteDto;
 import joaohotz.rm556402.orbitalsense.entities.LeituraColetada;
 import joaohotz.rm556402.orbitalsense.entities.Satelite;
+import joaohotz.rm556402.orbitalsense.enums.Status;
 import joaohotz.rm556402.orbitalsense.exceptions.DatabaseException;
 import joaohotz.rm556402.orbitalsense.exceptions.ResourceNotFoundException;
 import joaohotz.rm556402.orbitalsense.repositories.LeituraColetadaRepository;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 @Service
 public class LeituraColetadaService {
@@ -51,6 +55,28 @@ public class LeituraColetadaService {
         }
     }
 
+    @Transactional
+    public LeituraColetadaDto updateLeituraColetada(Long id, LeituraColetadaDto leituraColetadaDto) {
+        try {
+            LeituraColetada leituraColetada = leituraColetadaRepository.getReferenceById(id);
+            leituraColetada.setDataLeitura(LocalDate.now());
+            copyDtoToLeituraColetada(leituraColetadaDto, leituraColetada);
+            leituraColetada = leituraColetadaRepository.save(leituraColetada);
+            return new LeituraColetadaDto(leituraColetada);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso nao encontrado ID " + id);
+        }
+    }
+
+    @Transactional
+    public void deleteLeituraColetada(Long id) {
+        if (!leituraColetadaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso nao encontrado ID " + id);
+        }
+        leituraColetadaRepository.deleteById(id);
+    }
+
+
     private void copyDtoToLeituraColetada(LeituraColetadaDto leituraColetadaDto, LeituraColetada leituraColetada) {
         leituraColetada.setTipoMedicao(leituraColetadaDto.getTipoMedicao());
         leituraColetada.setValorMedido(leituraColetadaDto.getValorMedido());
@@ -62,4 +88,6 @@ public class LeituraColetadaService {
         leituraColetada.setSatelite(satelite);
 
     }
+
+
 }

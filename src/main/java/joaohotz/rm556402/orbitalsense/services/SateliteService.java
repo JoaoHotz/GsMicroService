@@ -50,7 +50,6 @@ public class SateliteService {
         try {
             Satelite satelite = sateliteRepository.getReferenceById(id);
             satelite.getLeituras().clear();
-            satelite.setStatus(Status.ATIVO);
             satelite.setDataLancamento(LocalDate.now());
             copyDtoToSatelite(sateliteDto, satelite);
             satelite = sateliteRepository.save(satelite);
@@ -73,6 +72,7 @@ public class SateliteService {
         satelite.setAgencia(sateliteDto.getAgencia());
         satelite.setTipo(sateliteDto.getTipo());
         satelite.setAltitudeKm(sateliteDto.getAltitudeKm());
+        satelite.setStatus(sateliteDto.getStatus());
 
         for (LeituraColetadaDto leituraColetadaDto: sateliteDto.getLeituras()){
             LeituraColetada leituraColetada = new LeituraColetada();

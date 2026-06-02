@@ -28,7 +28,7 @@ public class LeituraColetadaDto {
     @Size(max = 20, message = "A unidade deve ter no máximo 20 caracteres.")
     private String unidade;
 
-
+    @NotNull(message = "A data da leitura é obrigatória.")
     @PastOrPresent(message = "A data da leitura não pode ser futura.")
     private LocalDate dataLeitura;
 
